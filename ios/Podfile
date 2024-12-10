@@ -14,7 +14,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'Readings' do
+target 'Asteria' do
   config = use_native_modules!
   pod 'FirebaseCore', :modular_headers => true
   pod 'FirebaseCoreInternal'
@@ -27,7 +27,7 @@ target 'Readings' do
   pod 'GoogleUtilities', :modular_headers => true;
 
 
-  target 'ReadingsTests' do
+  target 'AsteriaTests' do
     inherit! :complete
     # Pods for testing
   end
