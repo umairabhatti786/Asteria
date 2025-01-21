@@ -2,6 +2,14 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "assets/fonts/Chillax-Variable.ttf",
+      "sha1": "01aafadc0ca4ace59127a5594a8f534e83b84879"
+    },
+    {
+      "path": "assets/fonts/Chillax.ttf",
+      "sha1": "67494d9ae8ef626ec47bfd54959fd51468d7086e"
+    },
+    {
       "path": "assets/fonts/WorkSans-Bold.ttf",
       "sha1": "29ee9214b2baa985b6ca8f1474a5d3c799a4fe81"
     },
@@ -20,6 +28,10 @@
     {
       "path": "assets/fonts/WorkSans-SemiBold.ttf",
       "sha1": "d118e3c6fd7618bd7b36072336e5710871c99cc0"
+    },
+    {
+      "path": "assets/fonts/fonnts.com-Chillax-Bold.ttf",
+      "sha1": "fe3beead6926618735670280f06a77ea15d62609"
     }
   ]
 }

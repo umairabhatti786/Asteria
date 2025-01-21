@@ -14,6 +14,6 @@ export const appStyles = StyleSheet.create({
 
 main:{
   flex:1,
-  backgroundColor:colors.dull_white
+  backgroundColor:colors.black
 }
 });

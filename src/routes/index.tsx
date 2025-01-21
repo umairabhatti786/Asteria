@@ -4,10 +4,20 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import AppStack from "./AppStack/AppStack";
 import { StatusBar } from "react-native";
-import { StorageServices, TOKEN } from "../utils/StorageService";
+import SplashScreen from "react-native-splash-screen";
 
 const RootNavigator = () => {
   const Stack = createStackNavigator();
+
+
+  useEffect(() => {
+    console.log("SpalsjRunning");
+    const timer = setTimeout(() => {
+      SplashScreen.hide(); // Hide splash screen after two seconds
+    }, 2000);
+
+    return () => clearTimeout(timer); // Clear the timer if the component unmounts
+  }, []);
 
 
 
@@ -15,8 +25,8 @@ const RootNavigator = () => {
   return (
     <NavigationContainer>
        <StatusBar
-        backgroundColor="#F3F5F7"
-        barStyle="dark-content"
+        backgroundColor="#000"
+        barStyle="light-content"
       />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="AppStack" component={AppStack} />

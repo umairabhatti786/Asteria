@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import CustomText from "../CustomText";
 import { colors } from "../../utils/colors";
 import { font } from "../../utils/font";
@@ -48,33 +48,35 @@ const CustomButton = ({
       style={{
         ...style,
         width: width || "100%",
-        height: verticalScale(height || 38),
-        backgroundColor: bgColor || colors.primary,
+        height: verticalScale(height || 43),
         justifyContent: "center",
         alignItems: "center",
-        borderRadius: scale(borderRadius || 10),
-        borderWidth: borderWidth || -1,
-        borderColor: borderColor,
-        paddingHorizontal: paddingHorizontal,
+        borderRadius: scale(borderRadius || 999),
+        borderWidth: borderWidth || 1,
+        borderColor: bgColor|| colors.primary+"60",
+        paddingHorizontal: scale(5),
+        paddingVertical: verticalScale(4),
+        // padding:scale(10)
       }}
     >
-      {isLoading ? (
-        <LottieView
-          style={{ width: scale(42), height: "100%" }}
-          source={require("./../../assets/json/laoding.json")}
-          renderMode="HARDWARE"
-          speed={1.2}
-          autoPlay
-        />
-      ) : (
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: bgColor || colors.primary,
+          width: "100%",
+          height: "100%",
+          borderRadius: 999,
+        }}
+      >
         <CustomText
           text={text}
-          color={textColor || colors.white}
-          size={size || 14}
-          fontWeight="500"
-          fontFam={fontFam || font.WorkSans_Regular}
+          color={textColor || colors.black}
+          size={size || 15}
+          fontWeight="600"
+          fontFam={fontFam || font.Chillax_SemiBold}
         />
-      )}
+      </View>
     </TouchableOpacity>
   );
 };

@@ -72,19 +72,30 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera access is needed to capture visuals for a more accurate tour experience.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone access allows you to ask Venli questions using your voice.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>For saving photos</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Readings accessing your location to provide your current address details.</string>
+	<string>Asteria accessing your location to provide your current address details.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Readings accessing your location to provide your current address details.</string>
+	<string>Asteria accessing your location to provide your current address details.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Readings accessing your location to provide your current address details.</string>
+	<string>Asteria accessing your location to provide your current address details.</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Chillax-Variable</string>
+		<string>fonnts.com-Chillax-Bold</string>
+		<string>Chillax.ttf</string>
 		<string>WorkSans-Bold.ttf</string>
 		<string>WorkSans-Light.ttf</string>
 		<string>WorkSans-Medium.ttf</string>
 		<string>WorkSans-Regular.ttf</string>
 		<string>WorkSans-SemiBold.ttf</string>
+		<string>fonnts.com-Chillax-Bold.ttf</string>
+		<string>Chillax-Variable.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -93,7 +104,7 @@
 		<string>arm64</string>
 	</array>
 	<key>UIStatusBarStyle</key>
-	<string></string>
+	<string/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

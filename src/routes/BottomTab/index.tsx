@@ -4,13 +4,16 @@ import {colors} from '../../utils/colors';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {images} from '../../assets/images';
 import CustomText from '../../components/CustomText';
-import HomeScreen from '../../screens/main/Home';
-import CategoriesScreen from '../../screens/main/Categories';
-import OrdersScreen from '../../screens/main/Orders';
-import CartScreen from '../../screens/main/Cart';
-import LikedScreen from '../../screens/main/Liked';
 import {font} from '../../utils/font';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import HoroscopeScreen from '../../screens/main/Horoscope';
+import ReadingsScreen from '../../screens/main/Readings';
+import CompatibilityScreen from '../../screens/main/Compatibility';
+import GuidanceScreen from '../../screens/main/Guidance';
+import ProfileScreen from '../../screens/main/Profile';
+import CompatibilityStack from '../CompatibilityStack';
+import GuidanceStack from '../GuidanceStack';
+import ReadingsStack from '../ReadingsStack';
 
 const BottomTab = ({}: any) => {
   const Bottom = createBottomTabNavigator();
@@ -26,15 +29,15 @@ const BottomTab = ({}: any) => {
           source={img}
           style={{
             ...style.img,
-            tintColor: focused ? colors.black : colors.grey,
+            tintColor: focused ? colors.primary : colors.white,
           }}
         />
         <CustomText
           text={title}
           fontWeight="400"
-          fontFam={font.WorkSans_Light}
-          size={10}
-          color={focused ? colors.black : colors.grey}
+          fontFam={font.Chillax_Medium}
+          size={11}
+          color={focused ? colors.primary : colors.white}
         />
       </View>
     );
@@ -44,14 +47,14 @@ const BottomTab = ({}: any) => {
     <GestureHandlerRootView style={{ flex: 1 }}>
 
     <Bottom.Navigator
-      initialRouteName="Home"
+      initialRouteName="Horoscope"
       screenOptions={({route}) => ({
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         animationEnabled: false,
         gestureEnabled: true,
         keyboardHidesTabBar: true,
-        cardStyleInterpolator: ({ current, next, layouts }) => {
+        cardStyleInterpolator: ({ current, next, layouts }:any) => {
           return {
             cardStyle: {
               transform: [
@@ -66,21 +69,19 @@ const BottomTab = ({}: any) => {
           };
         },
         tabBarStyle: {
-          position: 'absolute',
-          backgroundColor: 'rgba(243, 245, 247, 0.9)', // Semi-transparent background
+          backgroundColor: colors.black, // Semi-transparent background
           justifyContent: 'center',
           alignItems: 'center',
           borderTopWidth: 1,
-          borderTopColor: colors.dull_half_white,
-          display: 'flex',
+          borderTopColor: colors.primary+"20",
           height: verticalScale(Platform.OS == 'ios' ? 75 : 70),
-          paddingHorizontal:scale(20)
+          // paddingHorizontal:scale(20)
         },
         headerShown: false,
       })}>
       <Bottom.Screen
-        name="Home"
-        component={HomeScreen}
+        name="Horoscope"
+        component={HoroscopeScreen}
 
         options={{
         
@@ -89,8 +90,8 @@ const BottomTab = ({}: any) => {
            tabBarIcon: ({focused}) => {
             return (
               <TabItem
-                title={'Home'}
-                img={focused ? images.fill_home : images.unfill_home}
+                title={'Horoscope'}
+                img={focused ? images.horoscope : images.horoscope}
                 focused={focused}
               />
             );
@@ -111,15 +112,15 @@ const BottomTab = ({}: any) => {
       />
 
       <Bottom.Screen
-        name="Categories"
-        component={CategoriesScreen}
+        name="Readings"
+        component={ReadingsStack}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => {
             return (
               <TabItem
-                title={'Categories'}
-                img={focused ? images.fill_add : images.add_unfill}
+                title={'Readings'}
+                img={focused ? images.readings : images.readings}
                 focused={focused}
               />
             );
@@ -127,15 +128,15 @@ const BottomTab = ({}: any) => {
         }}
       />
       <Bottom.Screen
-        name="Orders"
-        component={OrdersScreen}
+        name="Compatibility"
+        component={CompatibilityStack}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => {
             return (
               <TabItem
-                title={'Orders'}
-                img={focused ? images.fill_box : images.unfill_box}
+                title={'Compatibility'}
+                img={focused ? images.compatibility : images.compatibility}
                 focused={focused}
               />
             );
@@ -144,15 +145,15 @@ const BottomTab = ({}: any) => {
       />
 
       <Bottom.Screen
-        name="Cart"
-        component={CartScreen}
+        name="Guidance"
+        component={GuidanceStack}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => {
             return (
               <TabItem
-                title={'Cart'}
-                img={focused ? images.fill_cart : images.unfill_cart}
+                title={'Guidance'}
+                img={focused ? images.guidance : images.guidance}
                 focused={focused}
               />
             );
@@ -160,15 +161,15 @@ const BottomTab = ({}: any) => {
         }}
       />
       <Bottom.Screen
-        name="Liked"
-        component={LikedScreen}
+        name="Profile"
+        component={ProfileScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => {
             return (
               <TabItem
-                title={'Liked'}
-                img={focused ? images.fill_heart : images.unfill_heart}
+                title={'Profile'}
+                img={focused ? images.profile : images.profile}
                 focused={focused}
               />
             );
@@ -185,7 +186,7 @@ export default BottomTab;
 
 const style = StyleSheet.create({
   itemStyle: {
-    width: scale(100),
+    // width: scale(100),
     backgroundColor: "transparent", // Semi-transparent background
     paddingTop:verticalScale(Platform.OS=="ios"? 7:0),
     paddingBottom:verticalScale(Platform.OS=="ios"? 0:5),
@@ -195,7 +196,7 @@ const style = StyleSheet.create({
   },
 
   img: {
-    height: scale(19),
-    width: scale(19),
+    height: scale(20),
+    width: scale(20),
   },
 });

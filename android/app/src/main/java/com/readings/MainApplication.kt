@@ -1,4 +1,4 @@
-package pk.com.reading
+package com.asteria
 
 import android.app.Application
 import com.facebook.react.PackageList

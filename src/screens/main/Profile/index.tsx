@@ -1,442 +1,406 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { colors } from "../../../utils/colors";
 import {
-  View,
-  TouchableOpacity,
-  ScrollView,
   FlatList,
   Image,
+  Platform,
+  ScrollView,
   StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import ScreenLayout from "../../../components/ScreenLayout";
 import { scale, verticalScale } from "react-native-size-matters";
-import { colors } from "../../../utils/colors";
-import TopHeader from "../../../components/TopHeader";
-import CustomText from "../../../components/CustomText";
 import { images } from "../../../assets/images";
-import { font } from "../../../utils/font";
-import CustomButton from "../../../components/CustomButton";
+import LinearGradient from "react-native-linear-gradient";
+import CustomText from "../../../components/CustomText";
 import { appStyles } from "../../../utils/AppStyles";
-import AddressCard from "../../../components/AddressCard";
-import PaymentCard from "../../../components/PaymentCard";
-import DeleteAccountModal from "./DeleteAccountModal";
-import { ApiServices } from "../../../apis/ApiServices";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getToken,
-  setAuthData,
-  setAuthToken,
-} from "../../../redux/reducers/authReducer";
-import { useIsFocused } from "@react-navigation/native";
-import { ProfileLayout } from "../../../utils/Loyout/ProfileLayout";
-import CustomToast from "../../../components/CustomToast";
-import { AUTHDATA, StorageServices, TOKEN } from "../../../utils/StorageService";
-import { sessionCheck } from "../../../utils/CommonHooks";
+import { windowWidth } from "../../../utils/Dimensions";
+import ScreenLayout from "../../../components/ScreenLayout";
+import { font } from "../../../utils/font";
+
 const ProfileScreen = ({ navigation }: any) => {
-  const [isAccountDeleteModal, setIsAccountDeleteModal] = useState(false);
-  const [userAddresses, setUserAddresses] = useState<any>();
-  const [message, setMessage] = useState("");
-  const [isMessage, setIsMessage] = useState(false);
-  const token = useSelector(getToken);
-  const isFocused = useIsFocused();
-  const [profile, setProfile] = useState<any>();
-  const [laoding, setlaoding] = useState(false);
-  const dispatch = useDispatch();
+  const [selectedTab, setSelectedTab] = useState(1);
 
-  console.log("token",token)
+  const tab = [
+    { name: "Major Arcana", id: 1 },
+    { name: "Wands", id: 2 },
+    { name: "Cups", id: 3 },
+    { name: "Swords", id: 4 },
+    { name: "Pentacles", id: 5 },
+  ];
 
-  // useEffect(() => {
-  //   getUserAddresses();
-  //   getUserProfile();
-  // }, [isFocused]);
+  const cardsData = [
+    { img: images.love_card, id: 1 },
+    { img: images.money_card, id: 2 },
+    { img: images.love_card, id: 3 },
+    { img: images.money_card, id: 4 },
+    { img: images.love_card, id: 5 },
+    { img: images.money_card, id: 6 },
+  ];
 
-  useEffect(() => {
-    if (isFocused) {
-      // Code to run when the screen is focused
-      getUserAddresses();
-      getUserProfile();
-      // Perform any other actions or fetch data
-    } else {
-      // Code to run when the screen is unfocused (if needed)
-    }
-  }, [isFocused]);
-  const getUserAddresses = () => {
-    setlaoding(true);
-    ApiServices.GetAddress(token, async ({ isSuccess, response }: any) => {
-      if (isSuccess) {
-        let result = JSON.parse(response);
-        console.log("AddressRes", result);
-
-        if (result?.data) {
-          setUserAddresses(result?.data?.addresses);
-          setlaoding(false);
-        } else {
-          if (result?.error == "Invalid token") {
-            sessionCheck(dispatch, navigation);
-
-            return;
-          }
-          setlaoding(false);
-          setMessage(result?.error);
-          setIsMessage(true);
-        }
-      } else {
-        setlaoding(false);
-        setMessage("Something went wrong");
-        setIsMessage(true);
-      }
-    });
-  };
-
-  const getUserProfile = () => {
-    ApiServices.GetProfile(token, async ({ isSuccess, response }: any) => {
-      if (isSuccess) {
-        let result = JSON.parse(response);
-        if (result?.data) {
-          setProfile(result?.data?.user);
-          StorageServices.setItem(AUTHDATA,result?.data?.user)
-          dispatch(setAuthData(result?.data?.user))
-
-
-        } else {
-          // setMessage(result?.error);
-          // setIsMessage(true);
-        }
-      } else {
-        setMessage("Something went wrong");
-        setIsMessage(true);
-      }
-    });
-  };
-
-  const deleteUserAddress = (id: any) => {
-    let params = {
-      id: id,
-      token: token,
-    };
-
-    ApiServices.DeleteAddresses(
-      params,
-      async ({ isSuccess, response }: any) => {
-        if (isSuccess) {
-          let result = JSON.parse(response);
-          if (result?.success) {
-            setMessage(result?.message);
-            let filterAddress = userAddresses?.filter((it: any) => it.id != id);
-            setUserAddresses(filterAddress);
-            setIsMessage(true);
-          } else {
-            setMessage(result?.error);
-            setIsMessage(true);
-          }
-        } else {
-          setMessage("Something went wrong");
-          setIsMessage(true);
-        }
-      }
+  const Header = () => {
+    return (
+      <View
+        style={[
+          {
+            ...appStyles.rowjustify,
+            gap: scale(15),
+          },
+        ]}
+      >
+        <CustomText
+          fontWeight="500"
+          numberOfLines={1}
+          color={colors.primary}
+          // fontFam={font.WorkSans_SemiBold}
+          text={"PROFILE"}
+          size={24}
+        />
+        <TouchableOpacity onPress={() => navigation.navigate("SettingScreen")}>
+          <Image
+            style={{
+              width: scale(30),
+              height: scale(30),
+            }}
+            resizeMode="contain"
+            source={images.setting}
+          />
+        </TouchableOpacity>
+      </View>
     );
   };
 
-  const onDeleteAccount = () => {
-    ApiServices.DeleteAccount(token, async ({ isSuccess, response }: any) => {
-      if (isSuccess) {
-        let result = JSON.parse(response);
-        // console.log("result",result?.error)
-        if (result?.success) {
-          setMessage(result?.message);
-          setIsMessage(true);
-          setIsAccountDeleteModal(false);
-
-          dispatch(setAuthData(null));
-          dispatch(setAuthToken(null));
-          StorageServices.removeItem(TOKEN);
-          StorageServices.removeItem(AUTHDATA)
-          navigation.goBack();
-        } else {
-          setIsAccountDeleteModal(false);
-          setMessage(result?.error);
-          setIsMessage(true);
-        }
-      } else {
-        setIsAccountDeleteModal(false);
-
-        setMessage("Something went wrong");
-        setIsMessage(true);
-      }
-    });
-  };
   return (
-    <>
-      <ScreenLayout>
-        {laoding ? (
-          <ProfileLayout />
-        ) : (
-          <>
-            <View
-              style={{
-                paddingHorizontal: scale(20),
-                paddingBottom: verticalScale(10),
-              }}
-            >
-              <TopHeader
-                title="Profile"
-                rightTitleColor={colors.red}
-                rightTitle="Delete Account"
-                onRightPress={() => {
-                  setIsAccountDeleteModal(true);
-                }}
-              />
-            </View>
+    <ScreenLayout style={styles.main}>
+      <Header />
 
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={{
-                backgroundColor: colors.dull_white,
-                flex: 1,
-              }}
-              contentContainerStyle={{
-                backgroundColor: colors.dull_white,
-                gap: verticalScale(20),
-              }}
-            >
-              <View style={{ paddingHorizontal: scale(20) }}>
-                <View
-                  style={{
-                    width: "100%",
-                    backgroundColor: colors.white,
-                    padding: scale(15),
-                    borderRadius: scale(10),
-                    gap: verticalScale(15),
-                    marginTop: verticalScale(10),
-                  }}
-                >
-                  <View style={{ ...appStyles.rowjustify }}>
-                    <CustomText color={colors.grey} text={"Name"} size={14} />
-                    <CustomText
-                      style={styles.profileTextContainer}
-                      color={colors.black}
-                      text={`${profile?.first_name} ${profile?.last_name}`}
-                      size={14}
-                    />
-                  </View>
-                  <View style={{ ...appStyles.rowjustify }}>
-                    <CustomText color={colors.grey} text={"Email"} size={14} />
-                    <CustomText
-                      color={colors.black}
-                      style={styles.profileTextContainer}
-                      text={`${profile?.email}`}
-                      size={14}
-                    />
-                  </View>
+      <LinearGradient
+        colors={["transparent", "#B2303060"]}
+        start={{ x: 0.5, y: 0 }} // Center-top start
+        end={{ x: 0.5, y: 1 }} // Center-bottom end
+        style={{
+          //   flex: 0.7,
+          borderWidth: 1,
+          borderColor: "#B2303060",
+          padding: scale(15),
 
-                  <View style={{ ...appStyles.rowjustify }}>
-                    <CustomText
-                      color={colors.grey}
-                      text={"Phone number"}
-                      size={14}
-                    />
-                    <CustomText
-                      color={colors.black}
-                      text={profile?.phone ? profile?.phone : "-"}
-                      size={14}
-                    />
-                  </View>
-                </View>
-                <View
-                  style={{
-                    ...appStyles.rowjustify,
-                    marginTop: verticalScale(8),
-                  }}
-                >
-                  <CustomButton
-                    width={"48%"}
-                    onPress={() => navigation.navigate("ChangePasswordScreen")}
-                    text="Change Password"
-                    bgColor={colors.white}
-                    textColor={colors.primary}
-                  />
-                  <CustomButton
-                    onPress={() =>
-                      navigation.navigate("EditProfileScreen", {
-                        data: profile,
-                      })
-                    }
-                    width={"48%"}
-                    text="Edit Info"
-                    bgColor={colors.white}
-                    textColor={colors.primary}
-                  />
-                </View>
-              </View>
-              <View>
+          borderRadius: scale(10),
+          gap: verticalScale(15),
+        }}
+      >
+        <View style={{ ...appStyles.row, gap: scale(10) }}>
+          <Image
+            style={{
+              width: scale(60),
+              height: scale(60),
+              borderRadius: 999,
+            }}
+            resizeMode="contain"
+            source={images.user}
+          />
+          <View style={{ gap: verticalScale(8), alignItems: "flex-start" }}>
+            <CustomText
+              text={"Tiffany Watson"}
+              size={18}
+              style={{ textAlign: "center" }}
+              color={colors.lightRed}
+              fontFam={font.Chillax_Medium}
+              fontWeight="600"
+            />
+            <View style={{ ...appStyles.row, gap: scale(5) }}>
               <CustomText
-                      text={"Saved Addresses"}
-                      color={colors.black}
-                      fontWeight="600"
-                      style={{
-                        marginLeft: scale(20),
-                        marginBottom: verticalScale(5),
-                        marginTop: verticalScale(5),
-                      }}
-                      fontFam={font.WorkSans_SemiBold}
-                      size={18}
-                    />
-                {userAddresses?.length > 0 && (
-                  <>
+                text={"Sept 22, 2001"}
+                size={14}
+                color={colors.lightRed}
+              />
+              <View style={{ ...appStyles.row, gap: scale(4) }}>
+                <View
+                  style={{
+                    ...styles.dot,
+                    width: scale(2),
+                    height: scale(2),
+                    backgroundColor: colors.lightRed,
+                  }}
+                />
+
+                <View
+                  style={{ ...styles.dot, backgroundColor: colors.lightRed }}
+                />
+
+                <View
+                  style={{
+                    ...styles.dot,
+                    width: scale(2),
+                    height: scale(2),
+                    backgroundColor: colors.lightRed,
+                  }}
+                />
+              </View>
+              <CustomText text={"10:30pm"} size={14} color={colors.lightRed} />
+            </View>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={{
+            width: "100%",
+            height: verticalScale(35),
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+            gap: scale(8),
+            borderRadius: scale(999),
+            borderWidth: 1,
+            borderColor: "#B2303060",
+            paddingHorizontal: scale(5),
+            paddingVertical: verticalScale(4),
+          }}
+        >
+          <Image
+            style={{
+              width: scale(20),
+              height: scale(20),
+              alignSelf: "center",
+            }}
+            resizeMode="contain"
+            source={images.edit}
+          />
+          <CustomText text={"Edit"} size={16} color={colors.red} />
+        </TouchableOpacity>
+
+        <Image
+          style={{
+            width: scale(120),
+            height: scale(120),
+            alignSelf: "center",
+          }}
+          resizeMode="contain"
+          source={images.cancer}
+        />
+        <View style={{ ...appStyles.row, gap: scale(4), alignSelf: "center" }}>
+          <CustomText
+            text={"Sun sign:"}
+            size={14}
+            fontFam={font.Chillax_Medium}
+            fontWeight="600"
+            color={colors.white}
+          />
+
+          <CustomText
+            text={"Cancer"}
+            fontFam={font.Chillax_Medium}
+            fontWeight="600"
+            size={14}
+            color={colors.lightRed}
+          />
+        </View>
+      </LinearGradient>
+      <View
+                style={{
+                  ...appStyles.rowjustify,
+                  gap: verticalScale(10),
+                }}
+              >
+                <View
+                  style={{
+                    ...styles.infoContainer,
+                    paddingLeft: scale(15),
                    
 
-                    <FlatList
-                      data={userAddresses}
-                      horizontal
-                      showsHorizontalScrollIndicator={false}
-                      style={{ paddingLeft: scale(20) }}
-                      contentContainerStyle={{
-                        paddingRight: scale(40),
-                        gap: scale(7),
-                      }}
-                      keyExtractor={(item, index) => index.toString()}
-                      renderItem={({ item, index }: any) => {
-                        let data = {
-                          Address: item?.Address,
-                          City: item?.City,
-                          Country: item?.Country,
-                          Phone: item?.Phone,
-                          PostCode: item?.PostCode,
-                        };
-                        return (
-                          <View>
-                            <AddressCard
-                            isProfile={true}
-                              data={data}
-                              onEditAddress={()=>navigation.navigate("AddAddressScreen",{isEdit:true,data:item})}
-                              
-                              onDeleteAddress={() => deleteUserAddress(item.id)}
-                            />
-                          </View>
-                        );
-                      }}
+                  }}
+                >
+                  <Image
+                    style={styles.infoIcon}
+                    resizeMode="center"
+                    source={images.zodiac_cancer}
+                  />
+
+                  <View style={{ gap: verticalScale(3) }}>
+                    <CustomText
+                      text={"Sagittarius"}
+                      size={16}
+                      color={colors.primary}
+                      fontWeight="600"
                     />
-                  </>
-                )}
+                    <CustomText
+                      text={"Ascendant"}
+                      size={14}
+                      color={colors.primary + "90"}
+                      fontWeight="600"
+                    />
+                  </View>
+                </View>
 
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  onPress={() => navigation.navigate("AddAddressScreen")}
+      <View
+        style={{
+          ...styles.infoContainer,
+          justifyContent: "flex-end",
+          alignItems: "flex-end",
+          paddingRight: scale(10),
+          borderWidth: 1,
+          borderColor: colors.primary,
+          borderRadius: scale(12),
+        }}
+      >
+        <View style={{ gap: verticalScale(3), alignItems: "flex-end" }}>
+          <CustomText
+            text={"Leo"}
+            size={16}
+            color={colors.primary}
+            fontWeight="600"
+          />
+          <CustomText
+            text={"Moon sign"}
+            size={14}
+            color={colors.primary + "90"}
+            fontWeight="600"
+          />
+        </View>
+        <Image
+          style={styles.infoIcon}
+          resizeMode="center"
+          source={images.zodiac_leo}
+        />
+      </View>
+      </View>
+      <View
+                style={{
+                  ...appStyles.rowjustify,
+                  gap: verticalScale(10),
+                }}
+              >
+                <View
                   style={{
-                    ...appStyles.row,
-                    gap: scale(10),
-                    marginHorizontal: scale(20),
-                    marginTop: verticalScale(
-                      userAddresses?.length > 0 ? 15 : 20
-                    ),
+                    ...styles.infoContainer,
+                    paddingLeft: scale(15),
+                   
+
                   }}
                 >
-                  <CustomText
-                    text={"Add New Address"}
-                    size={14}
-                    color={colors.primary}
-                    fontWeight="600"
-                    fontFam={font.WorkSans_SemiBold}
-                  />
                   <Image
-                    source={images.plus}
-                    resizeMode="contain"
-                    style={{
-                      width: scale(15),
-                      height: scale(15),
-                    }}
+                    style={styles.infoIcon}
+                    resizeMode="center"
+                    source={images.earth}
                   />
-                </TouchableOpacity>
-              </View>
-              <View>
-                <CustomText
-                  text={"Payment Methods"}
-                  color={colors.black}
-                  fontWeight="600"
+
+                  <View style={{ gap: verticalScale(3) }}>
+                    <CustomText
+                      text={"Earth"}
+                      size={16}
+                      color={colors.primary}
+                      fontWeight="600"
+                    />
+                    <CustomText
+                      text={"Element"}
+                      size={14}
+                      color={colors.primary + "90"}
+                      fontWeight="600"
+                    />
+                  </View>
+                </View>
+
+      <View
+        style={{
+          ...styles.infoContainer,
+          justifyContent: "flex-end",
+          alignItems: "flex-end",
+          paddingRight: scale(10),
+          borderWidth: 1,
+          borderColor: colors.primary,
+          borderRadius: scale(12),
+        }}
+      >
+        <View style={{ gap: verticalScale(3), alignItems: "flex-end" }}>
+          <CustomText
+            text={"Feminine"}
+            size={16}
+            color={colors.primary}
+            fontWeight="600"
+          />
+          <CustomText
+            text={"Popularity"}
+            size={14}
+            color={colors.primary + "90"}
+            fontWeight="600"
+          />
+        </View>
+        <Image
+          style={styles.infoIcon}
+          resizeMode="center"
+          source={images.info_gender_female}
+        />
+      </View>
+      </View>
+
+      <View
                   style={{
-                    marginLeft: scale(20),
-                    marginBottom: verticalScale(5),
-                    marginTop: verticalScale(5),
-                  }}
-                  fontFam={font.WorkSans_SemiBold}
-                  size={18}
-                />
-                <FlatList
-                  data={[1, 2, 3]}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  style={{ paddingLeft: scale(20) }}
-                  contentContainerStyle={{
-                    paddingRight: scale(40),
-                    gap: scale(15),
-                  }}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item, index }: any) => {
-                    return (
-                      <View>
-                        <PaymentCard info={true} />
-                      </View>
-                    );
-                  }}
-                />
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  onPress={() =>
-                    navigation.navigate("PaymentInfoScreen", {
-                      disableSkip: true,
-                    })
-                  }
-                  style={{
-                    ...appStyles.row,
-                    gap: scale(10),
-                    marginHorizontal: scale(20),
-                    marginTop: verticalScale(15),
+                    ...styles.infoContainer,
+                    paddingLeft: scale(15),
+                    width:"100%",
+                    borderColor:colors.light_yellow,
+                   
+
                   }}
                 >
-                  <CustomText
-                    text={"Add New Method"}
-                    size={14}
-                    color={colors.primary}
-                    fontWeight="600"
-                    fontFam={font.WorkSans_SemiBold}
-                  />
                   <Image
-                    source={images.plus}
+                    style={styles.infoIcon}
                     resizeMode="contain"
-                    style={{
-                      width: scale(15),
-                      height: scale(15),
-                    }}
+                    source={images.dollar}
                   />
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-          </>
-        )}
-      </ScreenLayout>
-      <DeleteAccountModal
-        modalVisible={isAccountDeleteModal}
-        setModalVisible={setIsAccountDeleteModal}
-        onCancel={() => {
-          setIsAccountDeleteModal(false);
-        }}
-        onDelete={() => {
-          onDeleteAccount();
-        }}
-      />
 
-      <CustomToast
-        isVisable={isMessage}
-        setIsVisable={setIsMessage}
-        message={message}
-      />
-    </>
+                  <View style={{ gap: verticalScale(3) }}>
+                    <CustomText
+                      text={"Earth"}
+                      size={16}
+                      color={colors.light_yellow}
+                      fontWeight="600"
+                    />
+                    <CustomText
+                      text={"Help us keep serving for free"}
+                      size={14}
+                      color={colors.light_yellow + "90"}
+                      fontWeight="600"
+                    />
+                  </View>
+                </View>
+
+
+
+     
+    </ScreenLayout>
   );
 };
 
 export default ProfileScreen;
+
 const styles = StyleSheet.create({
-  profileTextContainer: {
-    width: "82%",
-    textAlign: "right",
+  main: {
+    flex: 1,
+    gap: verticalScale(15),
+    paddingHorizontal: scale(15),
+    
+  },
+  dot: {
+    width: scale(6),
+    height: scale(6),
+    borderRadius: 999,
+    backgroundColor: colors.lightRed,
+  },
+
+  infoContainer: {
+    width: "47%",
+    paddingVertical: verticalScale(10),
+    alignItems: "center",
+    justifyContent: "flex-start",
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: scale(12),
+
+    flexDirection: "row",
+    gap: scale(10),
+  },
+  infoIcon: {
+    width: scale(30),
+    height: scale(30),
   },
 });

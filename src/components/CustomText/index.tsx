@@ -39,8 +39,8 @@ const CustomText = ({
         {
           color: color || colors.black,
           fontSize: size || 10,
-          fontWeight: fontWeight || '400',
-          fontFamily: fontFam || font.WorkSans_Light,
+          fontWeight: fontWeight || '500',
+          fontFamily: fontFam || font.Chillax_Regular,
           textTransform: textTransform,
           textDecorationLine: textDecorationLine,
           

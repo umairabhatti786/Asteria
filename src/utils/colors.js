@@ -1,15 +1,20 @@
 export const colors = {
-primary:"#3E5FAC",
+primary:"#B2AFFE",
+blue:"#252376",
 orange:"#F7941D",
-dark_black:"#000000",
-black:"#181C24",
-white:"#FFFF",
+black:"#000000",
+white:"#FFFFFF",
 dull_white:"#F3F5F7",
 dull_half_white:"#E3E5E7",
+light_yellow:"#FFD854",
 grey:"#858994",
 grey100:"#8C8C8C",
 green:"#00B466",
-red:"#FF4444"
+light_green:"#8EBFC6",
+red:"#FF4444",
+brown:"#D16135",
+red100:"#FC0160",
+lightRed:"#FFC2D9"
 
 
 

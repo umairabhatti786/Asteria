@@ -33,6 +33,7 @@ type Props = {
   textAlignVertical?: any;
   paddingTop?: any;
   onSubmitEditing?:()=>void
+  onFocus?:any
 };
 
 const CustomInput = ({
@@ -64,6 +65,7 @@ const CustomInput = ({
   textAlign,
   textAlignVertical,
   paddingTop,
+  onFocus,
   onSubmitEditing
 }: Props) => {
   return (
@@ -73,12 +75,12 @@ const CustomInput = ({
           flexDirection: 'row',
           justifyContent: 'space-between',
           paddingHorizontal: scale(15),
-          height: verticalScale(height || 39),
+          height: verticalScale(height || 42),
           alignItems: 'center',
-          borderColor: borderColor || '#E4E6EB',
-          borderWidth: borderWidth,
+          borderColor: borderColor || colors.primary+"40",
+          borderWidth: borderWidth||1,
           borderRadius: borderRadius || scale(10),
-          backgroundColor: backgroundColor || colors.white,
+          backgroundColor: backgroundColor || colors.primary+"10",
         }}>
         {leftSource && (
           <View
@@ -113,18 +115,20 @@ const CustomInput = ({
             textAlignVertical: textAlignVertical,
             paddingTop: paddingTop || 0,
             paddingVertical: 0, // Adjust as needed for centering
-            fontFamily: font.WorkSans_Regular,
+            fontFamily: font.Chillax_Regular,
             fontWeight: fontWeight || '500',
-            color: color || colors.black,
+            color: color || colors.primary+"80",
           }}
           placeholder={placeholder}
           multiline={multiline}
-          placeholderTextColor={placeholderTextColor || colors.grey}
+          placeholderTextColor={placeholderTextColor || colors.primary+"80"}
           keyboardType={keyboard}
           maxLength={maxLength}
           secureTextEntry={secureTextEntry || false}
           onChangeText={onChangeText}
           onBlur={onBlur}
+
+          onFocus={onFocus}
           autoCapitalize="none"
         />
         {rightSource && (
@@ -158,7 +162,7 @@ const CustomInput = ({
             
           }}>
           <CustomText
-            fontFam={font.WorkSans_Regular}
+            fontFam={font.Chillax_Regular}
             style={{textAlign:"right"}}
             size={12}
             text={error}

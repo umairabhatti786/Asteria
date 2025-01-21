@@ -1,5 +1,30 @@
 import { images } from "../../assets/images";
 
+
+export const shortTeamTransits = [
+  {
+    sun_img1: images.sun_time,
+    sun_img2: images.your_jupiter,
+    sun_title1: "Sun Trine",
+    sun_title2: "Your Jupiter",
+    des: "When the moon squared you natal mercury, you may find a conflict between truth and ...",
+  },
+  {
+    sun_img1: images.moon_square,
+    sun_img2: images.your_jupiter,
+    sun_title1: "Moon Square",
+    sun_title2: "Your Mercury",
+    des: "When the moon squared you natal mercury, you may find a conflict between truth and ...",
+  },
+  {
+    sun_img1: images.your_jupiter,
+    sun_img2: images.moon_square,
+    sun_title1: "Mercury Conjunction",
+    sun_title2: "Your Moon",
+    des: "When the moon squared you natal mercury, you may find a conflict between truth and ...",
+  },
+];
+
 export const CountryData = [
   { label: "Afghanistan", value: "AF", id: 1 },
   { label: "Albania", value: "AL", id: 2 },
